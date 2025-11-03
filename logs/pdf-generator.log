@@ -1,0 +1,28 @@
+2025-11-03T02:14:35.658Z - Starting multi-modal PDF generation - {"inputTypes":["text","tables","images","audioTranscripts"],"outputPath":"C:\\Users\\QX341\\Desktop\\测试代码\\RedDragon\\test\\output\\test_multi_modal.pdf"}
+2025-11-03T02:14:35.659Z - Processing text content - {"length":55}
+2025-11-03T02:14:35.659Z - Text processing completed - {"wordCount":1,"sentenceCount":1}
+2025-11-03T02:14:35.661Z - Processing table file - {"filePath":"C:\\Users\\QX341\\Desktop\\测试代码\\RedDragon\\test\\data\\test_table.xlsx"}
+2025-11-03T02:14:35.661Z - Error processing table - {"error":"ENOENT: no such file or directory, open 'C:\\Users\\QX341\\Desktop\\测试代码\\RedDragon\\test\\data\\test_table.xlsx'"}
+2025-11-03T02:14:35.663Z - Error generating multi-modal PDF - {"error":"ENOENT: no such file or directory, open 'C:\\Users\\QX341\\Desktop\\测试代码\\RedDragon\\test\\data\\test_table.xlsx'"}
+2025-11-03T02:16:03.313Z - Starting multi-modal PDF generation - {"inputTypes":["text","tables","images","audioTranscripts"],"outputPath":"C:\\Users\\QX341\\Desktop\\测试代码\\RedDragon\\test\\output\\test_multi_modal.pdf"}
+2025-11-03T02:16:03.313Z - Processing text content - {"length":55}
+2025-11-03T02:16:03.314Z - Text processing completed - {"wordCount":1,"sentenceCount":1}
+2025-11-03T02:16:03.316Z - Processing table file - {"filePath":"C:\\Users\\QX341\\Desktop\\测试代码\\RedDragon\\test\\data\\test_table.xlsx"}
+2025-11-03T02:16:03.317Z - Table processing completed - {"sheetCount":1}
+2025-11-03T02:16:03.317Z - Processing image file - {"filePath":"C:\\Users\\QX341\\Desktop\\测试代码\\RedDragon\\test\\data\\test_image.jpg"}
+2025-11-03T02:16:03.366Z - Tesseract progress - {"progress":0}
+2025-11-03T02:16:03.371Z - Tesseract progress - {"progress":1}
+2025-11-03T02:16:03.372Z - Tesseract progress - {"progress":0}
+2025-11-03T02:16:03.389Z - Tesseract progress - {"progress":1}
+2025-11-03T02:16:03.390Z - Tesseract progress - {"progress":0}
+2025-11-03T02:17:03.016Z - Starting multi-modal PDF generation - {"inputTypes":["text","tables","audioTranscripts"],"outputPath":"C:\\Users\\QX341\\Desktop\\测试代码\\RedDragon\\test\\output\\test_multi_modal.pdf"}
+2025-11-03T02:17:03.017Z - Processing text content - {"length":55}
+2025-11-03T02:17:03.017Z - Text processing completed - {"wordCount":1,"sentenceCount":1}
+2025-11-03T02:17:03.019Z - Processing table file - {"filePath":"C:\\Users\\QX341\\Desktop\\测试代码\\RedDragon\\test\\data\\test_table.xlsx"}
+2025-11-03T02:17:03.021Z - Table processing completed - {"sheetCount":1}
+2025-11-03T02:17:03.021Z - Processing audio transcript - {"length":72}
+2025-11-03T02:17:03.022Z - Audio transcript processing completed - {"wordCount":1,"sentenceCount":1}
+2025-11-03T02:17:03.022Z - Generated AI prompt - {"promptLength":537}
+2025-11-03T02:17:03.023Z - Generating text with OpenAI - {"prompt":"Please generate a comprehensive report based on the following multi-modal information:\n\nText content:\n这是一段测试文本，包含一些事实数据：2023年6月1日，公司销售额达到100万美元。同时，用户满意度为95%。\n\nTable 1 (test_table.xlsx):\nSheet names: Sheet1\nFirst few rows of first sheet:\n[]\n\nAudio transcript 1:\n这是一段语音转文字的测试内容。用户表达了对产品的积极反馈，认为产品功能强大，易于使用。同时，用户也提出了一些改进建议，希望增加更多的自定义选项。\n\nPlease ensure the report is well-structured, coherent, and integrates information from all modalities.\nIf there are any inconsistencies or contradictions between different modalities, please note them.\n","model":"text-davinci-003","temperature":0.7,"maxTokens":1000}
+2025-11-03T02:17:24.191Z - Error generating text with OpenAI - {"error":"connect ETIMEDOUT 108.160.170.52:443"}
+2025-11-03T02:17:24.195Z - Error generating multi-modal PDF - {"error":"connect ETIMEDOUT 108.160.170.52:443"}
