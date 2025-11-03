@@ -1,4 +1,5 @@
 const { getUserPersonality, updateUserPersonality, recordEvolutionHistory } = require('./personalityDatabase');
+const contextManager = require('./lib/multiModalContextManager');
 
 // 价值观词汇库
 const VALUES_VOCABULARY = {
@@ -130,7 +131,7 @@ function analyzeScenario(message) {
 }
 
 // 分析用户人格并更新数据库
-async function analyzePersonality(userId, message) {
+async function analyzePersonality(userId, message, contextType = 'text', contextData = {}) {
     // 获取用户人格数据
     let personality = getUserPersonality(userId);
     
@@ -139,14 +140,30 @@ async function analyzePersonality(userId, message) {
         personality = updateUserPersonality(userId, {});
     }
     
+    // 获取多模态上下文
+    const context = contextManager.getFullContext(userId);
+    
+    // 合并所有文本内容（文本消息、图片提取文本、语音转文字）
+    let allText = message;
+    if (context.currentContext.allText) {
+        allText += '\n' + context.currentContext.allText;
+    }
+    
     // 分析价值观倾向
-    const altruism = analyzeValues(message);
+    const altruism = analyzeValues(allText);
     
     // 分析情绪
-    const emotion = analyzeEmotion(message);
+    let emotion = 'neutral';
+    if (contextType === 'audio' && contextData.sentimentAnalysis) {
+        // 使用语音情绪分析结果
+        emotion = contextData.sentimentAnalysis.sentiment;
+    } else {
+        // 使用文本情绪分析
+        emotion = analyzeEmotion(allText);
+    }
     
     // 分析场景
-    const scenario = analyzeScenario(message);
+    const scenario = analyzeScenario(allText);
     
     // 更新情绪反馈频率
     const emotionalFeedbackFrequency = {
@@ -197,6 +214,17 @@ async function analyzePersonality(userId, message) {
                 sentenceComplexity: Math.min(1, personality.styleParameters.sentenceComplexity + 0.1),
                 formalityLevel: Math.min(0.7, Math.max(0.3, personality.styleParameters.formalityLevel))
             };
+            break;
+        default:
+            // 通用场景：根据上下文调整
+            // 如果上下文包含图片，稍微提高emoji密度
+            if (context.metadata.modalitiesUsed.has('image')) {
+                styleParametersChanges.emojiDensity = Math.min(1, personality.styleParameters.emojiDensity + 0.05);
+            }
+            // 如果上下文包含语音，稍微提高共情权重
+            if (context.metadata.modalitiesUsed.has('audio')) {
+                styleParametersChanges.empathyPriority = Math.min(1, personality.decisionWeights.empathyPriority + 0.05);
+            }
             break;
         default:
             // 通用场景：保持当前风格

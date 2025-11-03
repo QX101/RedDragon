@@ -1,5 +1,6 @@
 const { getUserPersonality } = require('./personalityDatabase');
 const { autoReply } = require('./autoreply');
+const contextManager = require('./lib/multiModalContextManager');
 
 // 简单的响应模板库
 const RESPONSE_TEMPLATES = {
