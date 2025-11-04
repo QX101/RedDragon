@@ -38,6 +38,18 @@ const SCENARIO_KEYWORDS = {
     study: [
         '学习', '学校', '学生', '老师', '作业', '考试', '课程', '知识', '教育', '培训',
         'study', 'school', 'student', 'teacher', 'homework', 'exam', 'course', 'knowledge', 'education', 'training'
+    ],
+    family_dinner: [
+        '家庭聚餐', '周末聚餐', '家庭聚会', '家宴', '聚餐食谱', '聚餐菜单',
+        'family dinner', 'weekend dinner', 'family gathering', 'home party', 'dinner menu'
+    ],
+    shopping: [
+        '购物', '买东西', '超市', '菜市场', '商场', '网购',
+        'shopping', 'supermarket', 'market', 'mall', 'online shopping'
+    ],
+    music: [
+        '音乐', '歌单', '歌曲', '听歌', '音乐会',
+        'music', 'playlist', 'song', 'listen to music', 'concert'
     ]
 };
 
@@ -130,14 +142,23 @@ function analyzeScenario(message) {
     return dominantScenario;
 }
 
-// 分析用户人格并更新数据库
-async function analyzePersonality(userId, message, contextType = 'text', contextData = {}) {
-    // 获取用户人格数据
-    let personality = getUserPersonality(userId);
+// 分析角色人格并更新数据库
+async function analyzePersonality(userId, message, contextType = 'text', contextData = {}, roleId = null) {
+    // 获取用户的当前角色，如果没有指定角色ID
+    let personality;
+    if (roleId) {
+        // 获取指定角色
+        const data = JSON.parse(fs.readFileSync(DATABASE_FILE, 'utf8'));
+        personality = data.users[userId]?.roles[roleId] || null;
+    } else {
+        // 获取当前角色
+        personality = getCurrentRole(userId);
+    }
     
     if (!personality) {
-        // 如果用户不存在，创建新的人格数据
-        personality = updateUserPersonality(userId, {});
+        // 如果角色不存在，返回null
+        console.log(`分析人格失败: 用户 ${userId} 或角色 ${roleId} 不存在`);
+        return null;
     }
     
     // 获取多模态上下文
@@ -226,9 +247,6 @@ async function analyzePersonality(userId, message, contextType = 'text', context
                 styleParametersChanges.empathyPriority = Math.min(1, personality.decisionWeights.empathyPriority + 0.05);
             }
             break;
-        default:
-            // 通用场景：保持当前风格
-            styleParametersChanges = {};
     }
     
     // 根据消极情绪反馈比例调整决策权重
@@ -265,7 +283,7 @@ async function analyzePersonality(userId, message, contextType = 'text', context
     };
     
     // 更新人格数据库
-    const updatedPersonality = updateUserPersonality(userId, allChanges);
+    const updatedPersonality = updateRolePersonality(userId, personality.id, allChanges);
     
     // 记录人格演化轨迹
     if (Object.keys(personalityChanges).length > 0 || 
@@ -278,7 +296,7 @@ async function analyzePersonality(userId, message, contextType = 'text', context
             decisionWeights: decisionWeightsChanges
         };
         
-        recordEvolutionHistory(userId, {
+        recordEvolutionHistory(userId, personality.id, {
             type: 'conversation',
             message,
             emotion,
